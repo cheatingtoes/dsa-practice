@@ -4,7 +4,7 @@
     TIME COMPLEXITY: O(N^2)
     SPACE COMPLEXITY: O(1) (not counting output array)
   
-    THE STRATEGY:
+    STRATEGY:
         1. Sort the array.
             - Necessary for using two pinters and skipping duplicates.
         2. Iterate through the array, treating each number as an "anchor".

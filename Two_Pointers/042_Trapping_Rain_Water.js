@@ -4,7 +4,7 @@
     TIME COMPLEXITY: O(N)
     SPACE COMPLEXITY: O(1)
 
-    The STRATEGY:
+    STRATEGY:
         1. Use two pointers starting at the edges of the array.
         2. Keep track of the maximum heights seen so far from both ends.
         3. Move the pointer with the smaller height inward.

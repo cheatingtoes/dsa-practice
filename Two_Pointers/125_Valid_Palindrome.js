@@ -4,7 +4,7 @@
     TIME COMPLEXITY: O(N)
     SPACE COMPLEXITY: O(1)
     
-    THE STRATEGY:
+    STRATEGY:
         1. Start with two pointers at the beginning and end of the string.
         2. Move the pointers toward each other, comparing characters.
 
