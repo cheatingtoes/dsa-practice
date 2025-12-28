@@ -31,6 +31,35 @@ var search = function(nums, target) {
         const mid = Math.floor((right - left) / 2) + left;
         const midN = nums[mid];
         if (midN === target) return true;
+
+        // right is sorted
+        if (rightN > midN) {
+            if (target > midN && target <= rightN) left = mid + 1;
+            else right = mid - 1;
+            // else left side?
+        } else if (midN > rightN) {
+            if (target >= leftN && target < midN) right = mid - 1;
+            else left = mid + 1
+        } else {
+            right--;
+        }
+
+
+    }
+    return false
+};
+
+//doesn't work!! small bug 
+var firstSearch = function(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+    // how to determine if it's left < right vs left <= right??
+    while (left <= right) {
+        const leftN = nums[left];
+        const rightN = nums[right];
+        const mid = Math.floor((right - left) / 2) + left;
+        const midN = nums[mid];
+        if (midN === target) return true;
         if (leftN === rightN) {
             if (leftN === target) {
                 return true;
