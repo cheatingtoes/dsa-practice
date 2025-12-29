@@ -1,0 +1,65 @@
+/*
+  PROBLEM: LeetCode 1011 Capacity to Ship Packages Within D Days
+  PATTERN: Binary Search (Modified with "Shaving")
+  TIME COMPLEXITY: O(log N) on average, but O(N) worst case (if array is all duplicates)
+  SPACE COMPLEXITY: O(1)
+
+  STRATEGY
+  1. Find upper + lower bounds of ship capacity and use binary search with helper fn.
+
+  NOTES
+  - Quite a few edge cases/things to watch out for. Need to be careful with how to round (Math.floor vs Math.round)
+    and checking the bounds of the array (e.g. edges of the array, equality check < vs <=)
+  
+  https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+*/
+
+/**
+ * @param {number[]} weights
+ * @param {number} days
+ * @return {number}
+ */
+var shipWithinDays = function(weights, days) {
+    // STRATEGY - use binary search to check capacity of ship
+    // how to get the upper bound?? sum of weights.
+    // lower bound is the highest weight in weights
+
+    // we want a helper fn to get days for a given capacity
+    const getDaysNeeded = capacity => {
+        let totalDays = 1;
+        let weightCount = 0;
+        for (const weight of weights) {
+            // if new weight exceeds capacity, add a new day and wipe count
+            if (weightCount + weight > capacity) {
+                totalDays++;
+                weightCount = 0;
+            }
+            weightCount += weight
+        }
+        return totalDays;
+    }
+
+    // upper and lower bounds of capacity
+    let upper = weights.reduce((a, b) => a + b, 0);
+    let lower = Math.max(...weights)
+
+    // we use strict < here because we're looking for the smallest number
+    // not some exact number. in the if statment in the loop, upper = mid,
+    // if we hit this case and left == right. infinite loop
+    while (lower < upper) {
+        // get mid capacity
+        const mid = Math.floor((upper - lower) / 2) + lower;
+        const daysNeeded = getDaysNeeded(mid);
+        // if daysNeeded is less than days, too much capacity!
+        // if daysNeeded is equal to days, possible lower capacity.
+        if (daysNeeded <= days) {
+            // upper = mid because mid could be the lowest, maybe not.
+            upper = mid;
+        } else {
+            // if mid is too small, we must add capacity!
+            // also without the +1 could lead to infinite loop
+            lower = mid + 1;
+        }
+    }
+    return lower;
+};
