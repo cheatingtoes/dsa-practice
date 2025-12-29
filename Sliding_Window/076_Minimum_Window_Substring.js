@@ -2,7 +2,7 @@
   PROBLEM: LeetCode 76 - Minimum Window Substring
   PATTERN: Sliding Window (Dynamic) + Hash Map + Optimization
   TIME COMPLEXITY: O(N)
-  SPACE COMPLEXITY: O(!)
+  SPACE COMPLEXITY: O(1)
 
   STRATEGY:
   1. Use a hash map to keep track of characters needed

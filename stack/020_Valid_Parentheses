@@ -1,0 +1,37 @@
+/*
+  PROBLEM: LeetCode 20 - Valid Parentheses
+  PATTERN: Stack
+  TIME COMPLEXITY: O(N)
+  SPACE COMPLEXITY: O(1)
+
+  STRATEGY:
+  1. Use a hash + stack to keep track of open and close parentheses
+  2. ?? win ??
+  
+  https://leetcode.com/problems/valid-parentheses/
+*/
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function(s) {
+    // use hash, if key exist (opening), until not, then compare with stack - last in first out.
+    const hash = {
+        '(': ')',
+        '[': ']',
+        '{': '}',
+    };
+    const stack = []
+    for (const bracket of s) {
+        // if hash[bracker], bracket is opening
+        if (hash[bracket]) {
+            stack.push(bracket)
+        } else {
+            // check if last in is closing bracket
+            const opening = stack.pop();
+            if (hash[opening] !== bracket) return false;
+        }
+    }
+    return stack.length == 0;
+};
