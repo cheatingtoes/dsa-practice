@@ -1,0 +1,58 @@
+# https://leetcode.com/problems/reorder-list/
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reorderList(self, head: Optional[ListNode]) -> None:
+        """
+        Do not return anything, modify head in-place instead.
+        """
+        if not head: return
+        
+        # STEP !: find the halfway point
+        slow, fast = head, head
+        while fast.next and fast.next.next:
+            # slow points to the halfway - 1 node;
+            slow = slow.next
+            # fast points to the very last node -> can discard
+            fast = fast.next.next
+    
+        # point to slow.next because if node.length = 6, slow = 3.
+        # we want to start at 4.
+        secondHalf = slow.next
+        # this does not assign the next value to None! this just severs the CONNECTION between slow and slow's next value
+        slow.next = None
+
+        # STEP 2: prep second half by reversing
+        # here, we need to systemically reverse node by node while going forward
+        # prev for previous val, curr for pointing the current value back, next to keep track of next node
+
+        # prev points to the previous node, the value we want to point to since we are reversing
+        prev = None
+        # curr is the current node we're flipping back to prev
+        curr = secondHalf
+
+        while curr:
+            # next so we don't forget where the next node is
+            temp = curr.next
+            # reverse the link
+            curr.next = prev
+            prev = curr
+            curr = temp
+        
+        # STEP 3: zipper merge, not so unlike reversing 
+        first = head
+        second = prev
+        
+        # second will always be >= first due to the + 1 when splitting
+        while second:
+            # Save the next pointers for both lists so we don't lose them
+            temp1, temp2 = first.next, second.next
+            # sets connection between first and second
+            first.next = second
+            second.next = temp1
+            
+            first, second = temp1, temp2
