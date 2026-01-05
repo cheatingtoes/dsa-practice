@@ -20,7 +20,6 @@ class Solution:
         return count
 
     def sinkIslandBFS(self, grid, r, c):
-        # i don't understand why r,c needs to be in parenthesis
         q = deque([(r, c)])
         grid[r][c] = '0'
 
