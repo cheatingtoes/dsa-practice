@@ -31,6 +31,7 @@ var longestPalindrome = function(s) {
         }
         if (evenLen > maxLen) {
             // add one here because we're starting with 2 chars, if no palindrome exist we need to close the gap to 0
+            // start is inclusive, end is exclusive
             start = evenLeft + 1;
             end = evenRight;
             maxLen = evenLen
