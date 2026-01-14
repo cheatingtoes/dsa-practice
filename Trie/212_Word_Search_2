@@ -1,0 +1,106 @@
+// https://leetcode.com/problems/word-search-ii
+// TIM COMPLEXITY: O(W * L) to build trie where W = words in array, L = max len of word
+// O(N * 4 * 3^(L-1)) to search board where N = number of cells in board, L = max length of words. 4 comes from the initial 4 directions, then 3 for subsequent since we can't go back
+// Combined: O(W * L + N * 4 * 3^(L-1)) or O(W * L + N * 3^L)
+// SPACE COMPLEXITY: O(N) N = total number of letters in words array for trie
+
+/**
+ * @param {character[][]} board
+ * @param {string[]} words
+ * @return {string[]}
+ */
+var TrieNode = function(val) {
+    this.val = val;
+    this.children = new Map();
+    this.end = false;
+    this.word;
+}
+
+TrieNode.prototype.next = function(char, childNode) {
+    this.children.set(char, childNode);
+}
+
+TrieNode.prototype.isEnd = function(bool) {
+    this.end = bool;
+}
+
+TrieNode.prototype.has = function(char) {
+    return this.children.has(char);
+}
+
+TrieNode.prototype.get = function(char) {
+    return this.children.get(char);
+}
+
+TrieNode.prototype.addWord = function(word) {
+    let temp = this;
+    for (const char of word) {
+        if (!temp.has(char)) {
+            // set new node
+            const node = new TrieNode(char);
+            temp.next(char, node);
+            temp = node;
+        } else {
+            // get next node's children
+            temp = temp.get(char);
+        }
+    }
+    temp.isEnd(true);
+    temp.word = word;
+}
+
+var findWords = function(board, words) {
+    // the question is asking given a board and an array of words, return the words that are in the baord where each character is adjacent to one another. each word can only use the same tile once
+    // this is similar to findWord, where you only have to find a single word. however for this one we need to find an array of words. i'm assuming some optimization needs to happen
+    // strategy - optimize word search using memo, using a hash map to store prefixes already search and its coordinates on the map. what if there are two different paths for the same prefix?
+    // we can implement a trie for all words first, so we're searching for all words in one go? instead of having to loop through the words array and remembering where we were last.
+    const root = new TrieNode();
+    const results = [];
+
+    for (const word of words) {
+        root.addWord(word);
+    }
+    const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    const rowLen = board.length;
+    const colLen = board[0].length;
+
+    // we've already confirm that the incoming node is valid for given tile so we just need to check if adjacent tiles are valid
+    const dfs = (node, row, col) => {
+        // base case
+        if (node.end) {
+            results.push(node.word);
+            node.isEnd(false);
+        }
+        const boardChar = board[row][col];
+        if (boardChar === null) return;
+        // set tile to null to prevent reusing same character
+        board[row][col] = null;
+
+        // check adjacent tiles
+        for (const [nr, nc] of directions) {
+            const nextRow = row + nr;
+            const nextCol = col + nc;
+            // check if adjacent tiles are valid before recursing
+            if (nextRow >= 0 && nextRow < rowLen && nextCol >= 0 && nextCol < colLen) {
+                const nextBoardChar = board[nextRow][nextCol];
+                if (node.has(nextBoardChar)) dfs(node.get(nextBoardChar), nextRow, nextCol);
+            }
+        }
+        board[row][col] = boardChar;
+    }
+
+    // run dfs on over every cell
+    for (let i = 0; i < rowLen; i++) {
+        for (let j = 0; j < colLen; j++) {
+            // have to check if the root node has a child with the tile character.
+            const tile = board[i][j];
+            for (const [char, childNode] of root.children.entries()) {
+                if (char == tile) {
+                    dfs(childNode, i, j);
+                }
+            }
+        }
+    }
+
+    return results;
+};
