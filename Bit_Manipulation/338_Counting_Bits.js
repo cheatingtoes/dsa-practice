@@ -1,5 +1,5 @@
 // https://leetcode.com/problems/counting-bits
-// TIME COMPLEXITY: O(n)
+// TIME COMPLEXITY: O(n) 
 // SPACE COMPLEXITY: O(n)
 
 /**
@@ -7,7 +7,7 @@
  * @return {number[]}
  */
 var countBits = function(n) {
-    // i can almost understand this!!  :)
+    // optimized solution - i can almost understand this!!  :)
     const dp = new Array(n + 1).fill(0);
     for (let i = 1; i <= n; i++) {
         // Combined logic: shift right and add the value of the last bit
