@@ -18,6 +18,7 @@ var maxDepth = function(root) {
     if (!root) return 0;
     let max = 0;
 
+    // pass in root and level, increment level as we recurse down each child
     const dfs = (root, level) => {
         // base case
         if (!root) return;
@@ -28,6 +29,7 @@ var maxDepth = function(root) {
         dfs(root.right, level + 1)
     }
 
+    // loop through levels using BFS, incrementing max at each level
     const bfs = () => {
         const queue = [root];
         while (queue.length) {
