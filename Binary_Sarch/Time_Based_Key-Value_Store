@@ -1,0 +1,57 @@
+// https://leetcode.com/problems/time-based-key-value-store/
+// TIME COMPLEXITY: O(log m) for get where m is the number of timestamps for a given key, O(1) for set
+// SPACE COMPLEXITY: O(n) where n is the number of entries in the key-value store
+
+class TimeMap {
+    constructor() {
+        this.keyStore = new Map();
+    }
+
+    /**
+     * @param {string} key
+     * @param {string} value
+     * @param {number} timestamp
+     * @return {void}
+     */
+    set(key, value, timestamp) {
+        // stores the key value pair at a given timestamp
+        // so for any given key, there is also a timestamp that return different values based on the timestampe
+        // const tsStore = this.keyStore.has(key) ? this.keyStore.get(key) : new Map();
+        // tsStore.set(timestamp, value);
+        if (this.keyStore.has(key)) this.keyStore.get(key).push([ timestamp, value ]);
+        else this.keyStore.set(key, [[timestamp, value]]);
+    }
+
+    /**
+     * @param {string} key
+     * @param {number} timestamp
+     * @return {string}
+     */
+    get(key, timestamp) {
+        // get the value for key + timestampe. if timestamp doesn't exist return the most recent value of key
+        if (!this.keyStore.has(key)) return '';
+
+        // entries should already be sorted here since they're being added in asc order
+        // another map where timestamp is the key and value is the value?
+        const entries = this.keyStore.get(key);
+
+        let left = 0;
+        let right = entries.length - 1;
+        let result = ''
+
+        // [10, 20, 30]. looking for 25
+        while (left <= right) {
+            const mid = Math.floor((left + right) / 2);
+            const [ts, val] = entries[mid];
+            if (ts === timestamp) return val;
+            // we're looking for the value or the next smallest that means that if the current ts is greater than, we can discard
+            if (ts > timestamp) {
+                right = mid - 1;
+            } else {
+                result = entries[mid][1]
+                left = mid + 1;
+            }
+        }
+        return result
+    }
+}
