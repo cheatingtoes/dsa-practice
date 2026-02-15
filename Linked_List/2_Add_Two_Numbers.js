@@ -21,31 +21,27 @@ var addTwoNumbers = function(l1, l2) {
 
     const dummy = new ListNode(null);
     let carry = 0;
-    let node = dummy;
+    let current = dummy;
 
     // loop through both elements
-    while (l1 || l2) {
+    while (l1 || l2 || carry) {
 
-        const l1Val = (l1 && l1.val) || 0;
-        const l2Val = (l2 && l2.val) || 0;
+        const l1Val = l1 ? l1.val : 0;
+        const l2Val = l2 ? l2.val : 0;
         const sum = l1Val + l2Val + carry;
         let nodeVal = sum % 10;
         if (sum >= 10) carry = 1
         else carry = 0;
 
         const newNode = new ListNode(nodeVal);
-        node.next = newNode;
-        node = newNode;
+        current.next = newNode;
+        current = newNode;
         if (l1) {
             l1 = l1.next;
         }
         if (l2) {
             l2 = l2.next;
         }
-    }
-    if (carry === 1) {
-        const newNode = new ListNode(1);
-        node.next = newNode;
     }
     return dummy.next;
 };
