@@ -47,3 +47,45 @@ var findOrder = function(numCourses, prerequisites) {
     }
     return [...result];
 };
+
+
+class Solution {
+    /**
+     * @param {number} numCourses
+     * @param {number[][]} prerequisites
+     * @return {number[]}
+     */
+    findOrder(numCourses, prerequisites) {
+        const inDegree = new Array(numCourses).fill(0);
+        const adj = Array.from({ length: numCourses }, () => []);
+
+        for (const [course, pre] of prerequisites) {
+            inDegree[course]++;
+            adj[pre].push(course);
+        }
+
+        const queue = [];
+        const result = [];
+
+        for (let i = 0; i < numCourses; i++) {
+            if (inDegree[i] === 0) queue.push(i);
+        }
+
+        let coursesTaken = 0;
+
+        while(queue.length > 0) {
+            const current = queue.shift();
+            result.push(current);
+            coursesTaken++;
+
+            for (const neighbor of adj[current]) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] === 0) {
+                    queue.push(neighbor);
+                }
+            }
+        }
+
+        return coursesTaken === numCourses ? result : [];
+    }
+}
